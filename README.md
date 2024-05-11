@@ -1,6 +1,8 @@
 # UDOffliner
 
-Create a backup of the UrbanDictionary for archiving purposes.
+Create a backup of the UrbanDictionary for archival purposes.
+
+DISCLAIMER: This project is in not affiliated with the UrbanDictionary website in any way shape or form.
 
 ### Features:
 
@@ -34,3 +36,30 @@ Create a backup of the UrbanDictionary for archiving purposes.
 5. have fun with your douzen `json` files.
   * [nushell](https://github.com/nushell/nushell) is great for exploring and converting data.
   * `gzip` can be used to compress them and reduce the storage space needed.
+
+### How does it work?
+
+pseudocode:
+
+```python
+if wordlist_cache.exists():
+  wordlist_cache.load()
+else:
+  for character in scrape_character_list():
+    scrape_wordlist("/browse.php?character=CHARACTER")
+    sleep_to_prevent_DOS()
+  wordlist_cache.save()
+
+for word in wordlist:
+  for definition in scrape_definition_list("/define.php?term=WORD"):
+    definitions.append(definition.parse())
+  definitions.bulk_download_votes(word)
+
+  if index_is_multiple_of(1000):
+    definitions.save_to_file()
+    definitions.empty_list()
+
+  sleep_to_prevent_DOS()
+
+definitions.save_to_file()
+```

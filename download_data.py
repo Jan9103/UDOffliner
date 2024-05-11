@@ -11,6 +11,7 @@ from time import sleep
 SLEEP_SECONDS_BETWEEN_REQUESTS: float = 0.1
 WORDLIST_FILE_PATH: str = "wordlist.json"
 RESULT_FILE_PATH: str = "result.json"
+RESULT_FILE_SIZE: int = 1000
 
 DEFINITION_LINK_REGEX = re.compile(r'"/define\.php\?term=([^"]+)"')
 BROWSE_CHARACTERS_REGEX = re.compile(r'"/browse\.php\?character=(.)"')
@@ -142,18 +143,25 @@ def get_votes(definition_ids: List[int]) -> Dict[int, Tuple[int, int]]:
     return result
 
 
-def download_all(wordlist: List[str]) -> Dict[str, List[Dict[str, Union[List[str], str, int]]]]:
+def download_all(wordlist: List[str]) -> None:
     print("Downloading all definitions")
     result: Dict[str, List[Dict[str, Union[List[str], str, int]]]] = {}
     total_defs: int = len(wordlist)
     idx: int = 0
+    if path.exists(f"until_idx_{total_defs - 1}.json") or path.exists(f"until_idx_{total_defs - 1}.json.gz"):
+        print("+ already downloaded everything.")
+        return
+    while path.exists(f"until_idx_{idx + RESULT_FILE_SIZE}.json") or path.exists(f"until_idx_{idx + RESULT_FILE_SIZE}.json.gz"):
+        idx += RESULT_FILE_SIZE
+        print(f"+ skipping until {idx} (results already present)")
+
     while idx < total_defs:
         word: str = wordlist[idx]
         print(f"+ downloading definition {word} ({idx + 1}/{total_defs})")
 
         result[word] = download_definitions_for(word)
 
-        if idx % 1000 == 0:
+        if idx % RESULT_FILE_SIZE == 0:
             print("saving result section")
             with open(f"until_idx_{idx}.json", "w") as f:
                 json.dump(result, f)
@@ -162,7 +170,8 @@ def download_all(wordlist: List[str]) -> Dict[str, List[Dict[str, Union[List[str
 
         sleep(SLEEP_SECONDS_BETWEEN_REQUESTS)
 
-    return result
+    with open(f"until_idx_{idx}.json", "w") as f:
+        json.dump(result, f)
 
 
 if __name__ == "__main__":
