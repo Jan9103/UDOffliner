@@ -10,7 +10,6 @@ from time import sleep
 
 SLEEP_SECONDS_BETWEEN_REQUESTS: float = 0.1
 WORDLIST_FILE_PATH: str = "wordlist.json"
-RESULT_FILE_PATH: str = "result.json"
 RESULT_FILE_SIZE: int = 1000
 
 DEFINITION_LINK_REGEX = re.compile(r'"/define\.php\?term=([^"]+)"')
@@ -110,9 +109,10 @@ def parse_definition_entry(html_tag: Tag) -> Dict[str, Union[int, str, List[str]
     examples: List[str] = []
     if example is not None:
         examples = [
-            BeautifulSoup(i, features="html.parser").text
-            for i in str(example).split("<br/>")
-            if not i.isspace()
+            h for h in (
+                BeautifulSoup(i, features="html.parser").text
+                for i in str(example).split("<br/>")
+            ) if not h.isspace()  # nested to avoid parsing it twice
         ]
     contributor = html_tag.find(class_="contributor")
     assert contributor is not None, "HTML definition does not contain a 'contributor'"
