@@ -1,4 +1,5 @@
 *.db
 *.gz
+*.html
 *.json
 *.sqlite3

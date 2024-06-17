@@ -15,7 +15,7 @@ DISCLAIMER: This project is in not affiliated with the UrbanDictionary website i
   * [x] votes
 * [x] unify json files
 * [x] generate SQLite database
-* [ ] generate html-file directory for nginx/...
+* [x] static site generator
 
 ### Notices:
 
@@ -48,6 +48,7 @@ Helpful for further exploration / use:
 2. check the code for viruses. no it does not contain any, but i could be lying and you should always check.
 3. install all dependencies.
 4. run `make all`.
+  * or `make staticsite`
 
 alternative to `make all`:
 ```bash

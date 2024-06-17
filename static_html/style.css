@@ -1,0 +1,28 @@
+:root {
+  --bg: wheat;
+  --fg: navy;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+h1 {
+  width: 100%;
+  background-color: var(--fg);
+  color: var(--bg);
+  text-align: center;
+}
+
+.def {
+  border: 1px solid var(--fg);
+  border-radius: 25px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.ex>p, .meta {
+  border-top: 1px solid var(--fg);
+  padding-top: 5px;
+}

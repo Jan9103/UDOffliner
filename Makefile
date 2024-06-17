@@ -1,5 +1,7 @@
 all: ud.db
 
+staticsite: static_html/index.html
+
 clear_cache:
 	rm until_idx_*.json
 
@@ -14,4 +16,7 @@ ud.json: until_idx_0.json
 ud.sqlite3: ud.json
 	python3 ./toSqlite.py $< $@ || (rm $@; false)
 
-PHONY: all clear_cache
+static_html/index.html: ud.json
+	python3 ./generate_static_site.py $<
+
+PHONY: all clear_cache staticsite
